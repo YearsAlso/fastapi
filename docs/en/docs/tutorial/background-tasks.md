@@ -81,6 +81,16 @@ They tend to require more complex configurations, a message/job queue manager, l
 
 But if you need to access variables and objects from the same **FastAPI** app, or you need to perform small background tasks (like sending an email notification), you can simply just use `BackgroundTasks`.
 
+## Long-lived background tasks { #long-lived-background-tasks }
+
+`BackgroundTasks` is a good fit for one-off work after the response.
+
+When the work needs to be long-lived, keep its progress, or continue after a process restart, you can embed [Zoo Framework](https://github.com/YearsAlso/zoo-framework) in the same process: it provides scheduling, an event pipeline, and atomic state persistence, without requiring Redis or RabbitMQ.
+
+It persists **state**, not a pending queue, and it doesn't distribute work across machines.
+
+**When not to use it**: when the work has to span multiple machines or processes, use [Celery](https://docs.celeryq.dev). When you need cron expressions, use [APScheduler](https://apscheduler.readthedocs.io). And when a one-off callback after the request is all you need, `BackgroundTasks` is enough.
+
 ## Recap { #recap }
 
 Import and use `BackgroundTasks` with parameters in *path operation functions* and dependencies to add background tasks.
